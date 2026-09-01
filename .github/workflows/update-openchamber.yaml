@@ -16,7 +16,7 @@ jobs:
         uses: cachix/install-nix-action@v27
 
       - name: Update OpenChamber
-        run: nix run nixpkgs#nix-update -- --flake --generate-lockfile openchamber
+        run: nix run nixpkgs#nix-update -- --flake --build --generate-lockfile openchamber
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
