@@ -1,0 +1,101 @@
+{
+  lib,
+  buildNpmPackage,
+  copyDesktopItems,
+  fetchzip,
+  git,
+  makeDesktopItem,
+  makeWrapper,
+  nodejs_22,
+  nix-update-script,
+  openssh,
+  opencode,
+  versionCheckHook,
+  writableTmpDirAsHomeHook,
+}:
+
+buildNpmPackage (finalAttrs: {
+  pname = "openchamber";
+  version = "1.22.0";
+  nodejs = nodejs_22;
+
+  desktopItems = [
+    (makeDesktopItem {
+      name = "openchamber";
+      desktopName = "OpenChamber";
+      genericName = "OpenCode Web UI";
+      comment = "Desktop and web interface for OpenCode";
+      exec = "openchamber";
+      terminal = false;
+      categories = [
+        "Development"
+        "Utility"
+      ];
+      icon = "openchamber";
+      startupNotify = true;
+    })
+  ];
+
+  src = fetchzip {
+    url = "https://registry.npmjs.org/@openchamber/web/-/web-${finalAttrs.version}.tgz";
+    hash = "sha256-Pe0D7wrc+Uc8EkfuDepQt1UFnTrpUpAmCfhSgVaAM0g=";
+    stripRoot = false;
+  };
+
+  prePatch = ''
+    if [ -d package ]; then
+      cp -r package/. .
+      chmod -R u+w .
+      rm -rf package
+    fi
+  '';
+
+  postPatch = ''
+    cp ${./package-lock.json} package-lock.json
+  '';
+
+  npmDepsHash = "sha256-SH/N3HMSP9prNLqnOY1cs8zIPptD5LEoimMwM/EPYo0=";
+
+  dontNpmBuild = true;
+
+  npmFlags = [
+    "--no-audit"
+    "--no-fund"
+  ];
+
+  nativeBuildInputs = [
+    copyDesktopItems
+    makeWrapper
+  ];
+
+  propagatedBuildInputs = [ opencode ];
+
+  postInstall = ''
+    install -Dm644 dist/pwa-512.png \
+      $out/share/icons/hicolor/512x512/apps/openchamber.png
+
+    wrapProgram $out/bin/openchamber \
+      --prefix PATH : ${lib.makeBinPath [ git openssh ]} \
+      --set DISABLE_AUTOUPDATER 1 \
+      --set npm_config_update_notifier false
+  '';
+
+  doInstallCheck = true;
+  nativeInstallCheckInputs = [
+    writableTmpDirAsHomeHook
+    versionCheckHook
+  ];
+  versionCheckProgramArg = "--version";
+  versionCheckKeepEnvironment = [ "HOME" ];
+
+  passthru.updateScript = nix-update-script { };
+
+  meta = {
+    description = "Desktop and web interface for OpenCode AI agent";
+    homepage = "https://github.com/openchamber/openchamber";
+    downloadPage = "https://www.npmjs.com/package/@openchamber/web";
+    license = lib.licenses.mit;
+    mainProgram = "openchamber";
+    platforms = lib.platforms.linux;
+  };
+})

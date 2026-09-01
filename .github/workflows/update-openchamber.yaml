@@ -1,0 +1,28 @@
+name: "Update OpenChamber"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * 0"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+
+      - name: Update OpenChamber
+        run: nix run nixpkgs#nix-update -- --flake --generate-lockfile openchamber
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: update openchamber"
+          branch: "chore/update-openchamber"
+          title: "chore: update openchamber"
+          body: "Automated update of OpenChamber via nix-update."
+          labels: "dependencies"
