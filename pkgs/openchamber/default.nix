@@ -16,7 +16,7 @@
 
 buildNpmPackage (finalAttrs: {
   pname = "openchamber";
-  version = "1.22.0";
+  version = "1.21.1";
   nodejs = nodejs_22;
 
   desktopItems = [
@@ -38,23 +38,15 @@ buildNpmPackage (finalAttrs: {
 
   src = fetchzip {
     url = "https://registry.npmjs.org/@openchamber/web/-/web-${finalAttrs.version}.tgz";
-    hash = "sha256-Pe0D7wrc+Uc8EkfuDepQt1UFnTrpUpAmCfhSgVaAM0g=";
-    stripRoot = false;
+    hash = "sha256-6A1ZXDqGq0+NXGvknLAobLA+xqEHrdBB6DFPBB8EnQM=";
+    stripRoot = true;
   };
-
-  prePatch = ''
-    if [ -d package ]; then
-      cp -r package/. .
-      chmod -R u+w .
-      rm -rf package
-    fi
-  '';
 
   postPatch = ''
     cp ${./package-lock.json} package-lock.json
   '';
 
-  npmDepsHash = "sha256-SH/N3HMSP9prNLqnOY1cs8zIPptD5LEoimMwM/EPYo0=";
+  npmDepsHash = "sha256-F4y7nt78MQmP2YVC3bWj4dJcYKsfFFTZ716n3nkaakE=";
 
   dontNpmBuild = true;
 
