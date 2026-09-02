@@ -18,6 +18,7 @@
       packages = forSystems (
         system: pkgs: {
           openchamber = pkgs.callPackage ./pkgs/openchamber { };
+          openchamber-desktop = pkgs.callPackage ./pkgs/openchamber-desktop { };
           default = self.packages.${system}.openchamber;
         }
       );

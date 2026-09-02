@@ -1,10 +1,8 @@
 {
   lib,
   buildNpmPackage,
-  copyDesktopItems,
   fetchzip,
   git,
-  makeDesktopItem,
   makeWrapper,
   nodejs_22,
   nix-update-script,
@@ -18,23 +16,6 @@ buildNpmPackage (finalAttrs: {
   pname = "openchamber";
   version = "1.22.0";
   nodejs = nodejs_22;
-
-  desktopItems = [
-    (makeDesktopItem {
-      name = "openchamber";
-      desktopName = "OpenChamber";
-      genericName = "OpenCode Web UI";
-      comment = "Desktop and web interface for OpenCode";
-      exec = "openchamber";
-      terminal = false;
-      categories = [
-        "Development"
-        "Utility"
-      ];
-      icon = "openchamber";
-      startupNotify = true;
-    })
-  ];
 
   src = fetchzip {
     url = "https://registry.npmjs.org/@openchamber/web/-/web-${finalAttrs.version}.tgz";
@@ -55,19 +36,11 @@ buildNpmPackage (finalAttrs: {
     "--no-fund"
   ];
 
-  nativeBuildInputs = [
-    copyDesktopItems
-    makeWrapper
-  ];
-
-  propagatedBuildInputs = [ opencode ];
+  nativeBuildInputs = [ makeWrapper ];
 
   postInstall = ''
-    install -Dm644 dist/pwa-512.png \
-      $out/share/icons/hicolor/512x512/apps/openchamber.png
-
     wrapProgram $out/bin/openchamber \
-      --prefix PATH : ${lib.makeBinPath [ git openssh ]} \
+      --prefix PATH : ${lib.makeBinPath [ git openssh opencode ]} \
       --set DISABLE_AUTOUPDATER 1 \
       --set npm_config_update_notifier false
   '';

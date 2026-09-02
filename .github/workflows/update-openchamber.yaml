@@ -25,6 +25,9 @@ jobs:
       - name: Update OpenChamber
         run: nix run nixpkgs#nix-update -- --flake --build --generate-lockfile openchamber
 
+      - name: Update OpenChamber Desktop
+        run: nix run nixpkgs#nix-update -- --flake --build openchamber-desktop
+
       - name: Commit and push if updated
         run: |
           if [ -z "$(git status --porcelain)" ]; then
