@@ -4,7 +4,7 @@
   fetchzip,
   git,
   makeWrapper,
-  nodejs_22,
+  nodejs_24,
   nix-update-script,
   openssh,
   opencode,
@@ -14,12 +14,12 @@
 
 buildNpmPackage (finalAttrs: {
   pname = "openchamber";
-  version = "1.22.0";
-  nodejs = nodejs_22;
+  version = "1.22.1";
+  nodejs = nodejs_24;
 
   src = fetchzip {
     url = "https://registry.npmjs.org/@openchamber/web/-/web-${finalAttrs.version}.tgz";
-    hash = "sha256-KJZy8gPSYgM3zjf/K1GW9eSgY4/q9i8qY1pJDxKpjRc=";
+    hash = "sha256-Z0SlnWmu9Vd2gkdA1VXHV/fPyMPjJKEROUksBHgN3zw=";
     stripRoot = true;
   };
 
@@ -27,7 +27,7 @@ buildNpmPackage (finalAttrs: {
     cp ${./package-lock.json} package-lock.json
   '';
 
-  npmDepsHash = "sha256-X8vMZApMUWO74gmlPtfRI5nQlhUHVLh/fms0I4wgEbo=";
+  npmDepsHash = "sha256-cWvW7eEHS4SbV2bkXEqVZAzyvLBtXMKf8fq3kKWRZu4=";
 
   dontNpmBuild = true;
 
