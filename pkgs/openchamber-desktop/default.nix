@@ -11,20 +11,18 @@
   opencode,
   copyDesktopItems,
   makeDesktopItem,
-  nix-update-script,
   commandLineArgs ? "",
 }:
-
 buildNpmPackage (finalAttrs: {
   pname = "openchamber-desktop";
-  version = "1.22.0";
+  version = "1.22.2";
   nodejs = nodejs_22;
 
   src = fetchFromGitHub {
     owner = "openchamber";
     repo = "openchamber";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-oYdIysTvha06Ls2uZSlwR5Mm87ssicmmGPM4UsNx0yE=";
+    hash = "sha256-TUtLlEwSJUDEHhdyTV++tCVs5RMXMytCXiZXPv+Y2Ic=";
   };
 
   # The monorepo uses bun.lock; the npm workspace lockfile is committed in
@@ -41,7 +39,7 @@ buildNpmPackage (finalAttrs: {
     sed -i -E 's/"workspace:[^"]*"/"*"/g' package.json packages/*/package.json
   '';
 
-  npmDepsHash = "sha256-kxzQsv32IoJUmJM1NgFS3Y2kM6LpeioyAmzJ70qH/3w=";
+  npmDepsHash = "sha256-9sttjI4hPQfcFgSpY4UPeIR5Gme+LoR8K8kYQaBWpMU=";
 
   makeCacheWritable = true;
 
@@ -68,7 +66,7 @@ buildNpmPackage (finalAttrs: {
       exec = finalAttrs.pname;
       icon = "openchamber";
       terminal = false;
-      categories = [ "Development" ];
+      categories = ["Development"];
       startupNotify = true;
       startupWMClass = "openchamber";
     })
@@ -108,13 +106,17 @@ buildNpmPackage (finalAttrs: {
       --add-flags "$out/libexec/${finalAttrs.pname}/packages/electron" \
       --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}" \
       --add-flags ${lib.escapeShellArg commandLineArgs} \
-      --prefix PATH : ${lib.makeBinPath [ git openssh opencode ]} \
+      --prefix PATH : ${lib.makeBinPath [git openssh opencode]} \
       --set NODE_ENV "production"
 
     runHook postInstall
   '';
 
-  passthru.updateScript = nix-update-script { };
+  #
+  passthru.updateScript = {
+    command = [./update.sh];
+    supportedFeatures = [];
+  };
 
   meta = {
     description = "Electron desktop client for OpenCode AI agent";
