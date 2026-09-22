@@ -36,6 +36,16 @@ buildNpmPackage (finalAttrs: {
     "--no-fund"
   ];
 
+  # The published npm tarball ships lifecycle scripts (prepack/build/dev) that
+  # invoke `bun` against monorepo scripts not shipped in the tarball. The
+  # npmInstallHook runs `npm pack --dry-run`, which triggers those scripts and
+  # fails. Skip scripts only for the pack step; keep npmFlags free of
+  # --ignore-scripts so `npm rebuild` still builds native deps (node-pty,
+  # esbuild) in the configure phase.
+  npmPackFlags = [
+    "--ignore-scripts"
+  ];
+
   nativeBuildInputs = [ makeWrapper ];
 
   postInstall = ''

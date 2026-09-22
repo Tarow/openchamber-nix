@@ -51,9 +51,12 @@ src_root="$tmp_dir/openchamber-$latest"
 
 sed -i '/"packageManager":/d' "$src_root/package.json"
 sed -i '/"overrides"/,/^  }/d' "$src_root/package.json"
-sed -i -E 's/"workspace:[^"]*"/"*"/g' \
-  "$src_root/package.json" \
-  "$src_root"/packages/*/package.json
+# Rewrite workspace: protocol deps (workspace:*, workspace:^x.y.z, ...)
+# across the whole workspace tree, including nested workspaces such as
+# packages/sdk/examples/* introduced in newer releases.
+find "$src_root" -name package.json \
+  -not -path '*/node_modules/*' \
+  -exec sed -i -E 's/"workspace:[^"]*"/"*"/g' {} +
 
 (
   cd "$src_root"

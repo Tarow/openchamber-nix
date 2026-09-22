@@ -36,7 +36,10 @@ buildNpmPackage (finalAttrs: {
 
     sed -i '/"packageManager":/d' package.json
     sed -i '/"overrides"/,/^  }/d' package.json
-    sed -i -E 's/"workspace:[^"]*"/"*"/g' package.json packages/*/package.json
+    # Rewrite workspace: protocol deps across the whole workspace tree,
+    # including nested workspaces such as packages/sdk/examples/*.
+    find . -name package.json -not -path '*/node_modules/*' \
+      -exec sed -i -E 's/"workspace:[^"]*"/"*"/g' {} +
   '';
 
   npmDepsHash = "sha256-DvXksm9NdZILg2KXeyHuo4GDzjsWfqOhUlmuOJU6NiY=";
