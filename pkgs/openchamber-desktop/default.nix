@@ -15,14 +15,14 @@
 }:
 buildNpmPackage (finalAttrs: {
   pname = "openchamber-desktop";
-  version = "2.0.1";
+  version = "2.0.2";
   nodejs = nodejs_22;
 
   src = fetchFromGitHub {
     owner = "openchamber";
     repo = "openchamber";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-XBCt6BkX5jbFhAiSn/oVy4wUwvJn8NgCeOxkx5z40mM=";
+    hash = "sha256-VwqNXZmZK6eBbe/saUOAJNHRflkjMYcXwkkgzLesNT0=";
   };
 
   # The monorepo uses bun.lock; the npm workspace lockfile is committed in
@@ -42,7 +42,7 @@ buildNpmPackage (finalAttrs: {
       -exec sed -i -E 's/"workspace:[^"]*"/"*"/g' {} +
   '';
 
-  npmDepsHash = "sha256-4eR891GXJLEhcXTdThvSYkjoNY8QlVSBBb5RRrA/ZQ0=";
+  npmDepsHash = "sha256-ym57GdXL3zDZckzEL8rygJvqjH2/6sV2Ui+4duEeLc8=";
 
   makeCacheWritable = true;
 
