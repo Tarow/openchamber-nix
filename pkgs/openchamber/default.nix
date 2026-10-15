@@ -14,12 +14,12 @@
 
 buildNpmPackage (finalAttrs: {
   pname = "openchamber";
-  version = "2.3.2";
+  version = "2.3.3";
   nodejs = nodejs_24;
 
   src = fetchzip {
     url = "https://registry.npmjs.org/@openchamber/web/-/web-${finalAttrs.version}.tgz";
-    hash = "sha256-QbpdPNo+OszjL1m+AlxdE7hHEOpubsEXpm5H3/oHO5E=";
+    hash = "sha256-zE7vIABJPvv8nzSZ9zQuJWaz0ko6fd2kxD15mjX3KEo=";
     stripRoot = true;
   };
 
@@ -27,7 +27,7 @@ buildNpmPackage (finalAttrs: {
     cp ${./package-lock.json} package-lock.json
   '';
 
-  npmDepsHash = "sha256-1KXVvtxIPeYejI7mqgvISe51Xho6cfHDNt2YIz8gMKQ=";
+  npmDepsHash = "sha256-vRuEzaFO8s7WaBXF6rprMxMh3lZ4S/5YDECHTsVaytI=";
 
   dontNpmBuild = true;
 
