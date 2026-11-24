@@ -25,10 +25,10 @@ jobs:
         uses: cachix/install-nix-action@v27
 
       - name: Update OpenChamber
-        run: nix run nixpkgs#nix-update -- --flake --build --generate-lockfile openchamber
+        run: nix run github:Mic92/nix-update/v1.17.0#nix-update -- --flake --build --generate-lockfile openchamber
 
       - name: Update OpenChamber Desktop
-        run: nix run nixpkgs#nix-update -- --flake --build --use-update-script openchamber-desktop
+        run: nix run github:Mic92/nix-update/v1.17.0#nix-update -- --flake --build --use-update-script openchamber-desktop
 
       - name: Commit and push if updated
         run: |
