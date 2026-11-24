@@ -1,9 +1,9 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i bash -p bash coreutils curl gnugrep gnused gnutar gzip jq nix nix-update nodejs_24
+#!nix-shell -i bash -p bash coreutils curl gnugrep gnused gnutar gzip jq nix nodejs_24
 
 if [[ -z "${OC_DESKTOP_UPDATE_SHELL:-}" ]] && ! command -v jq >/dev/null 2>&1; then
   export OC_DESKTOP_UPDATE_SHELL=1
-  exec nix-shell -p bash coreutils curl gnugrep gnused gnutar gzip jq nix nix-update nodejs_24 \
+  exec nix-shell -p bash coreutils curl gnugrep gnused gnutar gzip jq nix nodejs_24 \
     --run "bash $(readlink -f "${BASH_SOURCE[0]}")"
 fi
 
@@ -75,7 +75,11 @@ cp "$src_root/package-lock.json" "$LOCK_FILE"
 
 (
   cd "$REPO_ROOT"
-  nix-update --flake --version "$latest" openchamber-desktop
+  # Use the same pinned release as the workflow: nixpkgs' nix-update can be
+  # an older version with broken --flake support.
+  nix run --extra-experimental-features 'nix-command flakes' \
+    github:Mic92/nix-update/v1.17.0#nix-update -- \
+    --flake --version "$latest" openchamber-desktop
 )
 
 echo "Updated openchamber-desktop to $latest"
