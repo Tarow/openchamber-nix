@@ -76,7 +76,9 @@ cp "$src_root/package-lock.json" "$LOCK_FILE"
 (
   cd "$REPO_ROOT"
   # Use the same pinned release as the workflow: nixpkgs' nix-update can be
-  # an older version with broken --flake support.
+  # an older version with broken --flake support. Once nixpkgs-unstable ships
+  # nix-update >= 1.17.0, restore `nix-update` in both nix-shell package lists
+  # above and replace this with a plain `nix-update` call.
   nix run --extra-experimental-features 'nix-command flakes' \
     github:Mic92/nix-update/v1.17.0#nix-update -- \
     --flake --version "$latest" openchamber-desktop

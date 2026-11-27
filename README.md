@@ -1,8 +1,3 @@
 # openchamber-nix
 
-Daily build of [OpenChamber](https://github.com/openchamber/openchamber) as a Nix flake.
-
-```console
-$ nix run github:Tarow/openchamber-nix            # web/daemon interface
-$ nix run github:Tarow/openchamber-nix#openchamber-desktop # Electron desktop client
-```
+This repository is no longer maintained. [OpenChamber](https://github.com/openchamber/openchamber) now ships its own Nix flake; use that instead: https://github.com/openchamber/openchamber

@@ -24,6 +24,8 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v27
 
+      # TODO: switch back to `nix run nixpkgs#nix-update` in both steps once
+      # nixpkgs-unstable ships nix-update >= 1.17.0 (fix for Mic92/nix-update#687).
       - name: Update OpenChamber
         run: nix run github:Mic92/nix-update/v1.17.0#nix-update -- --flake --build --generate-lockfile openchamber
 
